@@ -9,7 +9,7 @@ const productsSection = document.querySelector('.products');
 const getFetchErrorElements = document.getElementsByClassName('error');
 const getLoadingElements = document.getElementsByClassName('loading');
 
-function createFetchErrorMessage() {
+function createErrorMessage() {
   const fetchErrorEl = document.createElement('h2');
   fetchErrorEl.innerHTML = 'Algum erro ocorreu, recarregue a página e tente novamente';
   fetchErrorEl.classList.add('error');
@@ -40,9 +40,8 @@ async function renderProducts() {
     });
   } catch (e) {
     removeItemFromDOM(getLoadingElements);
-    console.log(e.message);
-    if (e.message === 'Failed to fetch') createFetchErrorMessage();
-    return e.message;
+    console.error(e.message);
+    createErrorMessage();
   }
 }
 
