@@ -1,11 +1,12 @@
 // Imports
 import { searchCep } from './helpers/cepFunctions';
-import { fetchProductsList } from './helpers/fetchFunctions';
-import { createProductElement } from './helpers/shopFunctions';
+import { fetchProduct, fetchProductsList } from './helpers/fetchFunctions';
+import { createCartProductElement, createProductElement } from './helpers/shopFunctions';
 import './style.css';
 
 document.querySelector('.cep-button').addEventListener('click', searchCep);
 const productsSection = document.querySelector('.products');
+const cartSection = document.querySelector('.cart__products')
 const getFetchErrorElements = document.getElementsByClassName('error');
 const getLoadingElements = document.getElementsByClassName('loading');
 
@@ -46,3 +47,11 @@ async function renderProducts() {
 }
 
 renderProducts();
+
+document.body.addEventListener('click', async (event) => {
+  if (event.target.classList.contains('product__add')) {
+    const getIdProduct = event.target.parentNode.querySelector('.product__id').innerHTML;
+    const productData = await fetchProduct(getIdProduct);
+    cartSection.appendChild(createCartProductElement(productData));
+  }
+});
