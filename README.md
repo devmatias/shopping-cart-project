@@ -1,8 +1,8 @@
-# Trybe - Shopping Card Project
+# Trybe - Shopping Cart Project
 
 Esse foi um projeto realizado em conjunto com a Trybe, empresa profissionalizante de desenvolvedores. Com o design oferecido por eles, desenvolvi funções e testes que simulam passos de uma compra online. Foram utilizadas uma API do Mercado Livre para buscar dados de produtos e uma API de CEP para pegar um endereço.
 
-## Table of contents
+## Mesa de conteúdo
 
 - [Overview](#overview)
   - [O desafio](#o-desafio)
