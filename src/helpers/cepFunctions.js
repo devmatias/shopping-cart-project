@@ -1,12 +1,10 @@
 export async function fetchFirstCEPAPI(cep) {
-  if (!cep) throw new Error('Cep não informado');
   const response = await fetch(`https://cep.awesomeapi.com.br/json/${cep}`);
   const data = await response.json();
   return data;
 }
 
 export async function fetchSecondCEPAPI(cep) {
-  if (!cep) throw new Error('Cep não informado');
   const response = await fetch(`https://brasilapi.com.br/api/cep/v2/${cep}`);
   const data = await response.json();
   return data;
@@ -14,6 +12,7 @@ export async function fetchSecondCEPAPI(cep) {
 
 export const getAddress = async (cep) => {
   // seu código aqui
+  if (!cep) throw new Error('Cep não informado');
   const data = await Promise.any([
     fetchFirstCEPAPI(cep),
     fetchSecondCEPAPI(cep),
@@ -30,10 +29,9 @@ export const searchCep = async () => {
     if (data.code === 'invalid' || data.type === 'service_error') {
       throw Error('CEP não encontrado');
     }
-    console.log(data);
     adressElement.innerHTML = `${data.address || data.street} \
 - ${data.district || data.neighborhood} - ${data.city} - ${data.state}`;
   } catch (error) {
-    adressElement.innerHTML = 'CEP não encontrado';
+    adressElement.innerHTML = error.message;
   }
 };

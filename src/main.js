@@ -8,8 +8,6 @@ import './style.css';
 document.querySelector('.cep-button').addEventListener('click', searchCep);
 const productsSection = document.querySelector('.products');
 const cartSection = document.querySelector('.cart__products');
-const getFetchErrorElements = document.getElementsByClassName('error');
-const getLoadingElements = document.getElementsByClassName('loading');
 
 function createErrorMessage() {
   const fetchErrorEl = document.createElement('h2');
@@ -20,7 +18,7 @@ function createErrorMessage() {
 
 function removeItemFromDOM(item) {
   if (item.length > 0) {
-    item[0].parentNode.removeChild(item[0]);
+    item[0].remove();
   }
 }
 
@@ -32,16 +30,19 @@ function createLoading() {
 }
 
 async function renderProducts() {
+  const loadingElement = document.getElementsByClassName('loading');
+  const errorElement = document.getElementsByClassName('error');
+
   try {
-    removeItemFromDOM(getFetchErrorElements);
+    removeItemFromDOM(errorElement);
     createLoading();
     const products = await fetchProductsList('computador');
-    removeItemFromDOM(getLoadingElements);
+    removeItemFromDOM(loadingElement);
     return products.forEach((product) => {
       productsSection.appendChild(createProductElement(product));
     });
   } catch (e) {
-    removeItemFromDOM(getLoadingElements);
+    removeItemFromDOM(loadingElement);
     console.error(e.message);
     createErrorMessage();
   }
