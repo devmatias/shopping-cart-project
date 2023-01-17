@@ -12,7 +12,7 @@ Esse foi um projeto realizado em conjunto com a Trybe, empresa profissionalizant
   - [Contruído com](#contruido-com)
   - [Continuação do desenvolvimento](#continuacao-do-desenvolvimento)
   - [Recursos Úteis](#recursos-úteis)
-- [autor](#autor)
+- [Autor](#autor)
 - [Instalação](#instalação)
 
 ## Overview
