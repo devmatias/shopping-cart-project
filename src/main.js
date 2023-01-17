@@ -71,15 +71,9 @@ function renderSavedCartItems() {
 
 renderSavedCartItems();
 
-async function changeTotalPrice() {
+function changeTotalPrice() {
   const totalPriceElement = document.querySelector('.total-price');
   const items = getSavedCartIDs();
-  // const priceItems = items.map(async ({ id }) => {
-  //   const fetchedItem = await fetchProduct(id);
-  //   return fetchedItem.price;
-  // });
-  // const total = priceItems.reduce((acc, cur) => acc + cur, 0);
-  // console.log(total);
   const total = items.reduce((acc, cur) => acc + cur.price, 0);
   totalPriceElement.innerText = total;
 }
