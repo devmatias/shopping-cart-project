@@ -1,4 +1,5 @@
 // Imports
+import { getSavedCartIDs, saveCartID } from './helpers/cartFunctions';
 import { searchCep } from './helpers/cepFunctions';
 import { fetchProduct, fetchProductsList } from './helpers/fetchFunctions';
 import { createCartProductElement, createProductElement } from './helpers/shopFunctions';
@@ -6,7 +7,7 @@ import './style.css';
 
 document.querySelector('.cep-button').addEventListener('click', searchCep);
 const productsSection = document.querySelector('.products');
-const cartSection = document.querySelector('.cart__products')
+const cartSection = document.querySelector('.cart__products');
 const getFetchErrorElements = document.getElementsByClassName('error');
 const getLoadingElements = document.getElementsByClassName('loading');
 
@@ -48,10 +49,53 @@ async function renderProducts() {
 
 renderProducts();
 
-document.body.addEventListener('click', async (event) => {
-  if (event.target.classList.contains('product__add')) {
-    const getIdProduct = event.target.parentNode.querySelector('.product__id').innerHTML;
-    const productData = await fetchProduct(getIdProduct);
-    cartSection.appendChild(createCartProductElement(productData));
-  }
-});
+function addProductsToCart() {
+  document.body.addEventListener('click', async (event) => {
+    if (event.target.classList.contains('product__add')) {
+      const getIdProduct = event.target.parentNode
+        .querySelector('.product__id').innerHTML;
+      const productData = await fetchProduct(getIdProduct);
+      saveCartID(productData);
+      const createElement = createCartProductElement(productData);
+      cartSection.appendChild(createElement);
+    }
+  });
+}
+
+addProductsToCart();
+
+function renderSavedCartItems() {
+  const savedItems = getSavedCartIDs();
+  savedItems.forEach((item) => cartSection.appendChild(createCartProductElement(item)));
+}
+
+renderSavedCartItems();
+
+async function changeTotalPrice() {
+  const totalPriceElement = document.querySelector('.total-price');
+  const items = getSavedCartIDs();
+  // const priceItems = items.map(async ({ id }) => {
+  //   const fetchedItem = await fetchProduct(id);
+  //   return fetchedItem.price;
+  // });
+  // const total = priceItems.reduce((acc, cur) => acc + cur, 0);
+  // console.log(total);
+  const total = items.reduce((acc, cur) => acc + cur.price, 0);
+  totalPriceElement.innerText = total;
+}
+
+changeTotalPrice();
+
+function eventsToChangePrice() {
+  const config = { childList: true };
+  const callback = function (mutationsList) {
+    mutationsList.forEach((mutation) => {
+      if (mutation.type === 'childList') changeTotalPrice();
+    });
+  };
+  const observer = new MutationObserver(callback);
+  observer.observe(cartSection, config);
+  cartSection.addEventListener('load', changeTotalPrice);
+}
+
+eventsToChangePrice();
