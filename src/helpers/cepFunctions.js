@@ -13,11 +13,15 @@ export async function fetchSecondCEPAPI(cep) {
 export const getAddress = async (cep) => {
   // seu código aqui
   if (!cep) throw new Error('Cep não informado');
-  const data = await Promise.any([
-    fetchFirstCEPAPI(cep),
-    fetchSecondCEPAPI(cep),
-  ]);
-  return data;
+  try {
+    const data = await Promise.any([
+      fetchFirstCEPAPI(cep),
+      fetchSecondCEPAPI(cep),
+    ]);
+    return data;
+  } catch (error) {
+    return { code: 'invalid' };
+  }
 };
 
 export const searchCep = async () => {

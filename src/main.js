@@ -48,8 +48,6 @@ async function renderProducts() {
   }
 }
 
-renderProducts();
-
 function addProductsToCart() {
   document.body.addEventListener('click', async (event) => {
     if (event.target.classList.contains('product__add')) {
@@ -63,23 +61,21 @@ function addProductsToCart() {
   });
 }
 
-addProductsToCart();
-
-function renderSavedCartItems() {
+async function renderSavedCartItems() {
   const savedItems = getSavedCartIDs();
-  savedItems.forEach((item) => cartSection.appendChild(createCartProductElement(item)));
+  const itemsId = savedItems.map(({ id }) => fetchProduct(id));
+  const fetchItems = await Promise.all(itemsId);
+  fetchItems.forEach((item) => cartSection.appendChild(createCartProductElement(item)));
 }
 
-renderSavedCartItems();
-
-function changeTotalPrice() {
+async function changeTotalPrice() {
   const totalPriceElement = document.querySelector('.total-price');
   const items = getSavedCartIDs();
-  const total = items.reduce((acc, cur) => acc + cur.price, 0);
+  const itemsId = items.map(({ id }) => fetchProduct(id));
+  const fetchItems = await Promise.all(itemsId);
+  const total = fetchItems.reduce((acc, cur) => acc + cur.price, 0);
   totalPriceElement.innerText = total;
 }
-
-changeTotalPrice();
 
 function eventsToChangePrice() {
   const config = { childList: true };
@@ -93,4 +89,10 @@ function eventsToChangePrice() {
   cartSection.addEventListener('load', changeTotalPrice);
 }
 
-eventsToChangePrice();
+window.onload = () => {
+  renderProducts();
+  addProductsToCart();
+  renderSavedCartItems();
+  changeTotalPrice();
+  eventsToChangePrice();
+};
